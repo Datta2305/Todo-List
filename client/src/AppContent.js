@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { 
+import {
   Container,
   AppBar,
   Toolbar,
@@ -101,21 +101,28 @@ function AppContent() {
       <CssBaseline />
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            MERN Todo App
-          </Typography>
+          <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
+            <img
+              src="/assets/logo.png"
+              alt="App Logo"
+              style={{ height: 40, marginRight: 12 }}
+            />
+            <Typography variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
+              To-do List
+            </Typography>
+          </Box>
           {user && (
             <Button color="inherit" onClick={logout}>Logout</Button>
           )}
-          <IconButton 
-            color="inherit" 
+          <IconButton
+            color="inherit"
             onClick={() => toggleTheme(mode === 'light' ? 'dark' : 'light')}
           >
             {mode === 'dark' ? <WbSunny /> : <Brightness4 />}
           </IconButton>
         </Toolbar>
       </AppBar>
-      
+
       <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
         {!user ? (
           <AuthForm onAuthSuccess={handleAuthSuccess} />

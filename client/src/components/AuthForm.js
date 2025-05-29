@@ -9,6 +9,8 @@ import {
   Paper
 } from '@mui/material';
 
+
+
 const AuthForm = ({ onAuthSuccess }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [form, setForm] = useState({
@@ -17,6 +19,8 @@ const AuthForm = ({ onAuthSuccess }) => {
     password: ''
   });
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -51,7 +55,10 @@ const AuthForm = ({ onAuthSuccess }) => {
         throw new Error(data.error || 'Authentication failed');
       }
 
-      onAuthSuccess(data);
+      setSuccess(isLogin ? 'Login Successful!' : 'Registered Successfully!');
+      setTimeout(() => {
+        onAuthSuccess(data);
+      }, 1000); // Wait 1 second before proceeding
     } catch (err) {
       setError(err.message);
     }
@@ -66,6 +73,12 @@ const AuthForm = ({ onAuthSuccess }) => {
       {error && (
         <Typography color="error" align="center" sx={{ mb: 2 }}>
           {error}
+        </Typography>
+      )}
+
+      {success && (
+        <Typography color="success.main" align="center" sx={{ mb: 2 }}>
+          {success}
         </Typography>
       )}
 

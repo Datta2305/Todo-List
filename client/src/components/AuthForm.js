@@ -28,6 +28,7 @@ const AuthForm = ({ onAuthSuccess }) => {
     setError('');
     
     try {
+      const baseUrl = 'https://todo-list-kq4p.onrender.com'; // <-- Add this line
       const endpoint = isLogin ? '/api/login' : '/api/register';
       const payload = isLogin 
         ? { email: form.email, password: form.password }

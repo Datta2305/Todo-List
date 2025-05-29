@@ -39,7 +39,7 @@ function AppContent() {
   // Fetch todos
   const fetchTodos = async () => {
     try {
-      const res = await axios.get('/api/todos');
+      const res = await axios.get('https://todo-list-kq4p.onrender.com/api/todos');
       setTodos(res.data);
     } catch (err) {
       console.error('Failed to fetch todos:', err);
@@ -62,7 +62,7 @@ function AppContent() {
   // Todo handlers
   const addTodo = async (newTodo) => {
     try {
-      await axios.post('/api/todos', newTodo);
+      await axios.post('https://todo-list-kq4p.onrender.com/api/todos', newTodo);
       fetchTodos();
     } catch (err) {
       console.error('Failed to add todo:', err);
@@ -71,7 +71,7 @@ function AppContent() {
 
   const toggleComplete = async (id, completed) => {
     try {
-      await axios.patch(`/api/todos/${id}`, { completed: !completed });
+      await axios.patch(`https://todo-list-kq4p.onrender.com/api/todos/${id}`, { completed: !completed });
       fetchTodos();
     } catch (err) {
       console.error('Failed to update todo:', err);
@@ -80,7 +80,7 @@ function AppContent() {
 
   const deleteTodo = async (id) => {
     try {
-      await axios.delete(`/api/todos/${id}`);
+      await axios.delete(`https://todo-list-kq4p.onrender.com/api/todos/${id}`);
       fetchTodos();
     } catch (err) {
       console.error('Failed to delete todo:', err);

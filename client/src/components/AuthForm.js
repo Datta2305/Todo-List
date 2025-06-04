@@ -1,38 +1,25 @@
 import React, { useState } from 'react';
-import {
-  TextField,
-  Button,
-  Box,
-  Typography,
-  Link,
-  Stack,
-  Paper
-} from '@mui/material';
-
-
+import { Paper, Typography, Box, Stack, TextField, Button, Link, CircularProgress } from '@mui/material';
 
 const AuthForm = ({ onAuthSuccess }) => {
+  const [form, setForm] = useState({ username: '', email: '', password: '' });
   const [isLogin, setIsLogin] = useState(true);
-  const [form, setForm] = useState({
-    username: '',
-    email: '',
-    password: ''
-  });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setSuccess('');
+    setLoading(true);
 
     try {
-      const baseUrl = 'https://todo-list-kq4p.onrender.com'; // <-- Add this line
+      const baseUrl = 'https://todo-list-kq4p.onrender.com';
       const endpoint = isLogin ? '/api/login' : '/api/register';
       const payload = isLogin
         ? { email: form.email, password: form.password }
@@ -47,7 +34,7 @@ const AuthForm = ({ onAuthSuccess }) => {
       let data;
       try {
         data = await response.json();
-      } catch (e) {
+      } catch {
         throw new Error('Server returned an invalid response.');
       }
 
@@ -56,11 +43,11 @@ const AuthForm = ({ onAuthSuccess }) => {
       }
 
       setSuccess(isLogin ? 'Login Successful!' : 'Registered Successfully!');
-      setTimeout(() => {
-        onAuthSuccess(data);
-      }, 1000); // Wait 1 second before proceeding
+      onAuthSuccess(data); // Immediately update parent
     } catch (err) {
       setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -124,8 +111,10 @@ const AuthForm = ({ onAuthSuccess }) => {
             size="large"
             fullWidth
             sx={{ mt: 2 }}
+            disabled={loading}
+            startIcon={loading ? <CircularProgress size={20} color="inherit" /> : null}
           >
-            {isLogin ? 'Login' : 'Register'}
+            {loading ? 'Loading...' : (isLogin ? 'Login' : 'Register')}
           </Button>
 
           <Typography align="center" sx={{ mt: 2 }}>

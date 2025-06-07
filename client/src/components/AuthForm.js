@@ -39,7 +39,18 @@ const AuthForm = ({ onAuthSuccess }) => {
       }
 
       if (!response.ok) {
-        throw new Error(data.error || 'Authentication failed');
+        // Try to show backend error, fallback to status text or generic message
+        if (data && data.error) {
+          setError(data.error);
+        } else if (response.status === 400) {
+          setError('Invalid input or user already exists.');
+        } else if (response.status === 401) {
+          setError('Invalid credentials.');
+        } else {
+          setError(response.statusText || 'Authentication failed');
+        }
+        setLoading(false);
+        return;
       }
 
       setSuccess(isLogin ? 'Login Successful!' : 'Registered Successfully!');

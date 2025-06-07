@@ -21,7 +21,7 @@ const UserSchema = new mongoose.Schema({
   password: { type: String, required: true }
 });
 
-UserSchema.pre('save', async function(next) {
+UserSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
   this.password = await bcrypt.hash(this.password, 12);
   next();
@@ -59,7 +59,11 @@ app.post('/api/register', async (req, res) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
     res.status(201).send({ user, token });
   } catch (err) {
-    res.status(400).send(err);
+    // Handle duplicate key error from MongoDB
+    if (err.code === 11000) {
+      return res.status(400).send({ error: 'Username or email already exists' });
+    }
+    res.status(400).send({ error: err.message });
   }
 });
 

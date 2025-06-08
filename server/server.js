@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const crypto = require('crypto');
-// const nodemailer = require('nodemailer');
+const nodemailer = require('nodemailer');
 
 const app = express();
 app.use(cors());
@@ -180,12 +180,28 @@ app.post('/api/forgot-password', async (req, res) => {
     user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
     await user.save();
 
-    // Send email (for demo, just log the link)
-    const resetLink = `http://localhost:3000/reset-password/${token}`;
-    console.log('Password reset link:', resetLink);
+    // Create transporter
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+      }
+    });
 
-    // For production, use nodemailer to send the email
-    // await transporter.sendMail({ ... });
+    // Email content
+    const resetLink = `https://todo-list-datta.vercel.app/reset-password/${token}`;
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: user.email,
+      subject: 'Password Reset',
+      text: `You requested a password reset. Click the link to reset your password: ${resetLink}`,
+      html: `<p>You requested a password reset.</p>
+             <p>Click <a href="${resetLink}">here</a> to reset your password.</p>`
+    };
+
+    // Send email
+    await transporter.sendMail(mailOptions);
 
     res.send({ message: 'Password reset link sent to your email.' });
   } catch (err) {

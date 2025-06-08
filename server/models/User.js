@@ -7,7 +7,9 @@ const UserSchema = new Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   themePreference: { type: String, enum: ['light', 'dark', 'system'], default: 'system' },
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
+  resetPasswordToken: String,
+  resetPasswordExpires: Date
 });
 
 // Hash password before saving

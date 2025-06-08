@@ -17,7 +17,10 @@ import { ThemeContext, ThemeProvider } from './contexts/ThemeContext';
 import TodoForm from './components/TodoForm';
 import TodoItem from './components/TodoItem';
 import AuthForm from './components/AuthForm';
+import ForgotPassword from './components/ForgotPassword';
+import ResetPassword from './components/ResetPassword';
 import axios from 'axios';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 
 // Rename this to AppContent
 function AppContent() {
@@ -124,27 +127,33 @@ function AppContent() {
       </AppBar>
 
       <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
-        {!user ? (
-          <AuthForm onAuthSuccess={handleAuthSuccess} />
-        ) : (
-          <>
-            <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
-              <TodoForm onSubmit={addTodo} />
-            </Paper>
-            <Paper elevation={3} sx={{ p: 2 }}>
-              <List>
-                {todos.map(todo => (
-                  <TodoItem
-                    key={todo._id}
-                    todo={todo}
-                    onToggle={toggleComplete}
-                    onDelete={deleteTodo}
-                  />
-                ))}
-              </List>
-            </Paper>
-          </>
-        )}
+        <Routes>
+          <Route path="/" element={
+            !user ? (
+              <AuthForm onAuthSuccess={handleAuthSuccess} />
+            ) : (
+              <>
+                <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
+                  <TodoForm onSubmit={addTodo} />
+                </Paper>
+                <Paper elevation={3} sx={{ p: 2 }}>
+                  <List>
+                    {todos.map(todo => (
+                      <TodoItem
+                        key={todo._id}
+                        todo={todo}
+                        onToggle={toggleComplete}
+                        onDelete={deleteTodo}
+                      />
+                    ))}
+                  </List>
+                </Paper>
+              </>
+            )
+          } />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
+        </Routes>
       </Container>
     </MuiThemeProvider>
   );
@@ -154,7 +163,9 @@ function AppContent() {
 export default function App() {
   return (
     <ThemeProvider>
-      <AppContent />
+      <Router>
+        <AppContent />
+      </Router>
     </ThemeProvider>
   );
 }

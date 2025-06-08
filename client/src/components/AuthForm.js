@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Paper, Typography, Box, Stack, TextField, Button, Link, CircularProgress } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const AuthForm = ({ onAuthSuccess }) => {
   const [form, setForm] = useState({ username: '', email: '', password: '' });
@@ -7,6 +8,7 @@ const AuthForm = ({ onAuthSuccess }) => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -19,7 +21,7 @@ const AuthForm = ({ onAuthSuccess }) => {
     setLoading(true);
 
     try {
-      const baseUrl = 'https://todo-list-kq4p.onrender.com';
+      const baseUrl = process.env.REACT_APP_API_URL;
       const endpoint = isLogin ? '/api/login' : '/api/register';
       const payload = isLogin
         ? { email: form.email, password: form.password }
@@ -138,6 +140,18 @@ const AuthForm = ({ onAuthSuccess }) => {
               {isLogin ? 'Register here' : 'Login here'}
             </Link>
           </Typography>
+          {isLogin && (
+            <Typography align="right">
+              <Link
+                component="button"
+                underline="hover"
+                sx={{ fontSize: 14 }}
+                onClick={() => navigate('/forgot-password')}
+              >
+                Forgot Password?
+              </Link>
+            </Typography>
+          )}
         </Stack>
       </Box>
     </Paper>

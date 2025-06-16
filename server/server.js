@@ -190,7 +190,7 @@ app.post('/api/forgot-password', async (req, res) => {
     });
 
     // Email content
-    const resetLink = `http://localhost:3000/forgot-password/${token}`;
+    const resetLink = `https://todo-list-datta.vercel.app/reset-password/${token}`;
     const mailOptions = {
       from: 'sridattajwalachakravarthi@gmail.com', // must match your verified sender in SendGrid
       to: user.email,

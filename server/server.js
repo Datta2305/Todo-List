@@ -180,19 +180,19 @@ app.post('/api/forgot-password', async (req, res) => {
     user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
     await user.save();
 
-    // Create transporter
+    // Create transporter for Gmail SMTP
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      service: 'SendGrid',
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
+        user: 'apikey', // this is literally the string 'apikey'
+        pass: process.env.SENDGRID_API_KEY
       }
     });
 
     // Email content
-    const resetLink = `https://todo-list-datta.vercel.app/reset-password/${token}`;
+    const resetLink = `http://localhost:3000/forgot-password/${token}`;
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: 'sridattajwalachakravarthi@gmail.com', // must match your verified sender in SendGrid
       to: user.email,
       subject: 'Password Reset',
       text: `You requested a password reset. Click the link to reset your password: ${resetLink}`,

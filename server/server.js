@@ -65,8 +65,8 @@ const authenticate = async (req, res, next) => {
 // Routes
 // Auth Routes
 
-app.use('/api/login', authLimiter);
-app.use('/api/register', authLimiter);
+// app.use('/api/login', authLimiter);
+// app.use('/api/register', authLimiter);
 
 const refreshTokens = [];
 
